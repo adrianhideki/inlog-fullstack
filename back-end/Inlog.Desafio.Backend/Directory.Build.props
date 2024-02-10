@@ -1,0 +1,10 @@
+<Project>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <SwashbuckleAspNetCore>6.5.0</SwashbuckleAspNetCore>
+        <MongoDBDriver>2.23.1</MongoDBDriver>
+        <MicrosoftExtensionsConfiguration>8.0.0</MicrosoftExtensionsConfiguration>
+        <FluentValidation>11.9.0</FluentValidation>
+        <MicrosoftExtensionsDependencyInjection>8.0.0</MicrosoftExtensionsDependencyInjection>
+    </PropertyGroup>
+</Project>
