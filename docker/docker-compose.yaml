@@ -1,0 +1,16 @@
+version: '3'
+services:
+  database:
+    image: mongo
+    restart: always
+    env_file:
+      - ./mongo.env
+    ports:
+      - 27017:27017
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    env_file:
+      - ./express.env
