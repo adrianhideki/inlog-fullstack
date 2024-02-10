@@ -6,6 +6,6 @@ public class Veiculo
     public TipoVeiculo TipoVeiculo { get; set; }
     public string Cor { get; set; } = "";
     public string Placa { get; set; } = "";
-    public double[] Coordenadas { get; set; } = Array.Empty<double>();
+    public Coordenada Coordenada { get; set; } = new();
     public string Id { get; set; } = Guid.NewGuid().ToString();
 }

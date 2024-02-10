@@ -7,4 +7,11 @@
         <FluentValidation>11.9.0</FluentValidation>
         <MicrosoftExtensionsDependencyInjection>8.0.0</MicrosoftExtensionsDependencyInjection>
     </PropertyGroup>
+
+    <PropertyGroup>
+        <MicrosoftNETTestSdk>17.9.0</MicrosoftNETTestSdk>
+        <xunit>2.6.6</xunit>
+        <xunitrunnervisualstudio>2.5.6</xunitrunnervisualstudio>
+        <Moq>4.20.70</Moq>
+    </PropertyGroup>
 </Project>
