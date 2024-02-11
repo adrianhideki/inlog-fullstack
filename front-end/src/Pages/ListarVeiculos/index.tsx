@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import haversine from "haversine-distance";
-import { Box, Button, Heading, Stack } from "@chakra-ui/react";
+import { Button, Stack } from "@chakra-ui/react";
 import Page from "../../Components/Page";
 import DataGrid from "./Components/DataGrid";
 import { DataGridColumnProps } from "./Components/DataGrid/Types";

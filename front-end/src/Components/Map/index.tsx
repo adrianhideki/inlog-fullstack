@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Box, BoxProps } from "@chakra-ui/react";
 import { Wrapper } from "@googlemaps/react-wrapper";
 import GoogleMap from "./GoogleMap";
@@ -8,12 +8,12 @@ type MapProps = {
   onClick?: (e: google.maps.MapMouseEvent) => void;
   center: google.maps.LatLngLiteral;
   zoom?: number;
-} & BoxProps;
+} & Omit<BoxProps, "onClick">;
 
-const Map = ({ children, center, zoom, onClick, ...props }: MapProps) => {
+const Map = memo<MapProps>(({ children, center, zoom, onClick, ...props }) => {
   return (
     <Box {...props}>
-      <div style={{ display: "flex", height: "100%" }}>
+      <div style={{ display: "flex", height: "100%", width: "100%" }}>
         <Wrapper apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY ?? ""}>
           <GoogleMap
             center={center}
@@ -29,6 +29,6 @@ const Map = ({ children, center, zoom, onClick, ...props }: MapProps) => {
       </div>
     </Box>
   );
-};
+});
 
 export default Map;
