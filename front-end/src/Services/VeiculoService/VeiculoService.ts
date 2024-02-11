@@ -1,4 +1,4 @@
-import { Axios, AxiosResponse } from "axios";
+import axios, { Axios, AxiosResponse } from "axios";
 import { OutVeiculo } from "./Models/OutVeiculo";
 import { InVeiculo } from "./Models/InVeiculo";
 import { IVeiculoService } from "./IVeiculoService";
@@ -12,13 +12,14 @@ class VeiculoService implements IVeiculoService {
   }
 
   constructor() {
-    this._client = new Axios({
+    this._client = axios.create({
       baseURL: `${process.env.REACT_APP_API_URL}/Veiculo`,
       headers: {
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Request-Headers": "*",
-        "Access-Control-Request-Method": "*",
-        "Content-Type": "application/json",
+      },
+      responseType: "json",
+      transitional: {
+        silentJSONParsing: true,
       },
     });
 
@@ -26,8 +27,8 @@ class VeiculoService implements IVeiculoService {
     this.setVeiculo = this.setVeiculo.bind(this);
   }
 
-  public getVeiculos(): Promise<AxiosResponse<OutVeiculo[]>> {
-    var response = this._client.get<OutVeiculo[]>("/Listar");
+  public getVeiculos(): Promise<AxiosResponse<Array<OutVeiculo>>> {
+    var response = this._client.get<Array<OutVeiculo>>("/Listar");
 
     return response;
   }

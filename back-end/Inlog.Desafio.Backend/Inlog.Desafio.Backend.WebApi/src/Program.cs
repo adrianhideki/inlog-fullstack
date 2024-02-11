@@ -11,6 +11,20 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Configuration.AddEnvironmentVariables();
 
+var corsPolicy = "default-policy";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: corsPolicy,
+                      policy =>
+                      {
+                          policy.WithOrigins("*")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                      });
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -25,8 +39,7 @@ if (app.Configuration.GetValue<bool>("ASPNETCORE_HTTPS_REDIRECTION"))
     app.UseHttpsRedirection();
 }
 
+app.UseCors(corsPolicy);
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

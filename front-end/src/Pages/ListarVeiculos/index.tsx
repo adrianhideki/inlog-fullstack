@@ -1,68 +1,152 @@
-import React, { useCallback } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
-import { Heading, Spinner } from "@chakra-ui/react";
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
-import { TriangleDownIcon } from "@chakra-ui/icons";
+import haversine from "haversine-distance";
+import { Box, Button, Heading, Stack } from "@chakra-ui/react";
 import Page from "../../Components/Page";
-import { useApi } from "../../Hooks/useApi";
-import {
-  IVeiculoService,
-  VEICULO_SERVICE_NAME,
-  veiculoServiceInstance,
-} from "../../Services/VeiculoService";
-import { OutVeiculo } from "../../Services/VeiculoService/Models/OutVeiculo";
-
-const displayMapContainerStyle: React.CSSProperties = {
-  width: "100%",
-  height: "400px",
-  top: 0,
-  left: 0,
-};
+import DataGrid from "./Components/DataGrid";
+import { DataGridColumnProps } from "./Components/DataGrid/Types";
+import Map from "../../Components/Map";
+import Marker from "../../Components/Map/Marker";
+import { veiculoServiceInstance } from "../../Services/VeiculoService";
 
 const ListarVeiculos = () => {
-  const [, setMap] = React.useState<google.maps.Map>();
-
-  const api = veiculoServiceInstance;
-  const { data } = useQuery("listar-veiculos", api.getVeiculos);
-
-  const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY ?? "",
+  const [center, setCenter] = useState<google.maps.LatLngLiteral>({
+    lat: 0,
+    lng: 0,
   });
 
-  const onLoad = useCallback(function callback(map: google.maps.Map) {
-    const bounds = new window.google.maps.LatLngBounds({
-      lat: -25.43247,
-      lng: -49.27845,
+  const [zoom, setZoom] = useState<number>(2);
+
+  const [currentLocation, setCurrentLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  }>({
+    latitude: 0,
+    longitude: 0,
+  });
+  const api = veiculoServiceInstance;
+  const { data, isLoading } = useQuery("listar-veiculos", api.getVeiculos);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      setCurrentLocation({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      });
+    });
+  }, []);
+
+  const veiculos = useMemo(() => {
+    const list =
+      data?.data.map((v) => ({
+        ...v.coordenada,
+        id: v.id,
+        chassi: v.chassi,
+        placa: v.placa,
+        cor: v.cor,
+        descricaoVeiculo: v.tipoVeiculo === 1 ? "Onibus" : "Caminhão",
+        distancia: haversine(currentLocation, v.coordenada) / 1000,
+      })) ?? [];
+
+    return list?.sort((a, b) => a.distancia - b.distancia);
+  }, [data?.data, currentLocation]);
+
+  useEffect(() => {
+    if (veiculos.length === 0) {
+      return;
+    }
+
+    setCenter({
+      lat: veiculos[0].latitude,
+      lng: veiculos[0].longitude,
     });
 
-    map.fitBounds(bounds);
+    setZoom(4);
+  }, [veiculos]);
 
-    setMap(map);
-  }, []);
+  const columns: DataGridColumnProps[] = useMemo(
+    () => [
+      {
+        id: "chassi",
+        name: "Chassi",
+      },
+      {
+        id: "descricaoVeiculo",
+        name: "Tipo do Veículo",
+      },
+      {
+        id: "cor",
+        name: "Cor",
+      },
+      {
+        id: "placa",
+        name: "Placa",
+      },
+      {
+        id: "distancia",
+        name: "Distância em KM",
+      },
+      {
+        id: "ver-no-mapa",
+        name: "",
+        handleRender: (data) => {
+          const handleClick = () => {
+            setCenter({
+              lat: Number(data["latitude"]),
+              lng: Number(data["longitude"]),
+            });
 
-  const onUnmount = useCallback(function callback(map: google.maps.Map) {
-    setMap(undefined);
-  }, []);
+            setZoom(4);
+          };
 
-  console.log(data);
+          return (
+            <Button variant="text" onClick={handleClick}>
+              Ver no mapa
+            </Button>
+          );
+        },
+      },
+    ],
+    [setCenter, setZoom]
+  );
 
   return (
-    <Page>
-      <Heading size="md">Listar Veículos</Heading>
-      {isLoaded ? (
-        <GoogleMap
-          mapContainerStyle={displayMapContainerStyle}
-          zoom={4}
-          onLoad={onLoad}
-          onUnmount={onUnmount}
+    <Page title="Veículos">
+      <Stack spacing={2}>
+        <Map
+          center={center}
+          zoom={zoom}
+          width="100%"
+          height="50vh"
+          borderRadius={2}
         >
-          {/* Child components, such as markers, info windows, etc. */}
-          <></>
-        </GoogleMap>
-      ) : (
-        <Spinner />
-      )}
+          <Marker
+            position={{
+              lat: currentLocation.latitude,
+              lng: currentLocation.longitude,
+            }}
+            icon="/images/blue_point.svg"
+            title={"Sua Localização"}
+            clickable={true}
+          />
+          {data?.data.map((x) => (
+            <Marker
+              key={x.id}
+              position={{
+                lat: x.coordenada.latitude,
+                lng: x.coordenada.longitude,
+              }}
+              title={`Chassi: ${x.chassi}`}
+            />
+          ))}
+        </Map>
+        <DataGrid
+          keyColumn="id"
+          columns={columns}
+          data={veiculos}
+          isLoading={isLoading}
+        />
+      </Stack>
     </Page>
   );
 };

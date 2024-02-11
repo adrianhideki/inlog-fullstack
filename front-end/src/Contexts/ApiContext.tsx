@@ -11,7 +11,7 @@ type ApiContextProps = {
 };
 
 type ApiProviderProps = {
-  apis: { name: string; api: object }[];
+  apis: Array<{ name: string; api: object }>;
 };
 
 const ApiContext = createContext<ApiContextProps>({} as ApiContextProps);

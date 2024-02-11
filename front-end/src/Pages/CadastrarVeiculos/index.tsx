@@ -4,7 +4,7 @@ import { Heading } from "@chakra-ui/react";
 
 const CadastrarVeiculos = () => {
   return (
-    <Page>
+    <Page title="Cadastrar Veículos">
       <Heading size="md">Cadastrar Veículos</Heading>
     </Page>
   );
