@@ -125,13 +125,14 @@ const ListarVeiculos = () => {
               lat: currentLocation.latitude,
               lng: currentLocation.longitude,
             }}
-            icon="/images/blue_point.svg"
+            icon="/images/home.svg"
             title={"Sua Localização"}
             clickable={true}
           />
           {data?.data.map((x) => (
             <Marker
               key={x.id}
+              icon={`images/${x.tipoVeiculo === 1 ? "bus" : "truck"}.svg`}
               position={{
                 lat: x.coordenada.latitude,
                 lng: x.coordenada.longitude,
