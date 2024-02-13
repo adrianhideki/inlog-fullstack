@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Table, TableContainer, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
 
-import DataGridRow from "../DataGridRow";
+import DataGridRow from "./DataGridRow";
 import { DataGridColumnProps, DataGridData } from "./Types";
 
 type DataGridProps = {

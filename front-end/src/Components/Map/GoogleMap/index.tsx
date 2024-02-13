@@ -19,7 +19,7 @@ const GoogleMap = ({
 
   useEffect(() => {
     if (ref.current && !map) {
-      setMap(new window.google.maps.Map(ref.current, {}));
+      setMap(new google.maps.Map(ref.current, {}));
     }
   }, [ref, map]);
 

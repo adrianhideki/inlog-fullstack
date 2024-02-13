@@ -20,6 +20,7 @@ const Header = () => {
         justifyContent="space-between"
         paddingX={4}
         paddingY={2}
+        background=""
       >
         <Box display="flex">
           <IconButton

@@ -1,6 +1,6 @@
 import { Button, ListItem } from "@chakra-ui/react";
 import React, { PropsWithChildren } from "react";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate, useLocation } from "react-router-dom";
 
 type NavigateButtonProps = {
   path: string;

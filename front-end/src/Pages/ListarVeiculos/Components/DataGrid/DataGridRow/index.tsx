@@ -1,5 +1,5 @@
 import { Td, Tr } from "@chakra-ui/react";
-import { DataGridColumnProps, DataGridData } from "../DataGrid/Types";
+import { DataGridColumnProps, DataGridData } from "../Types";
 import { useCallback } from "react";
 
 type DataGridRowProps = {
@@ -21,9 +21,11 @@ const DataGridRow = ({ columns, data }: DataGridRowProps) => {
 
   return (
     <Tr>
-      {columns.map((c) => (
-        <Td key={c.id}>{renderComponent(data, c)}</Td>
-      ))}
+      {columns
+        .filter((c) => !c.hide)
+        .map((c) => (
+          <Td key={c.id}>{renderComponent(data, c)}</Td>
+        ))}
     </Tr>
   );
 };

@@ -3,8 +3,8 @@ type VeiculoValues = {
   placa: string;
   cor: string;
   tipo?: number;
-  latitude?: number;
-  longitude?: number;
+  latitude?: string;
+  longitude?: string;
 };
 
 export type { VeiculoValues };

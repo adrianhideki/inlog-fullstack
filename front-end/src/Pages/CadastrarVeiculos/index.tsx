@@ -63,6 +63,8 @@ const CadastrarVeiculos = () => {
           chassi: "",
           placa: "",
           cor: "",
+          latitude: "",
+          longitude: "",
         }}
         initialErrors={{}}
         onSubmit={handleSubmit}
@@ -120,6 +122,7 @@ const CadastrarVeiculos = () => {
                     {...getFieldProps("tipo")}
                     isInvalid={!!errors["tipo"]}
                     placeholder="Tipo do Veículo"
+                    data-testid="tipo-veiculo"
                   >
                     <option value="1">Ônibus</option>
                     <option value="2">Caminhão</option>
@@ -156,14 +159,12 @@ const CadastrarVeiculos = () => {
                       {...getFieldProps("latitude")}
                       type="number"
                       placeholder="Latitude"
-                      readOnly
                       isInvalid={!!errors["latitude"]}
                     />
                     <Input
                       {...getFieldProps("longitude")}
                       type="number"
                       placeholder="Longitude"
-                      readOnly
                       isInvalid={!!errors["longitude"]}
                     />
                     <IconButton
@@ -207,7 +208,6 @@ const CadastrarVeiculos = () => {
               isOpen={isOpen}
               onClose={onClose}
               onConfirm={(e) => {
-                console.log(e);
                 setFieldValue("latitude", e.lat());
                 setFieldValue("longitude", e.lng());
               }}

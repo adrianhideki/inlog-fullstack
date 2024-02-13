@@ -12,7 +12,7 @@ type MapProps = {
 
 const Map = memo<MapProps>(({ children, center, zoom, onClick, ...props }) => {
   return (
-    <Box {...props}>
+    <Box data-testid="gmap-maker" {...props}>
       <div style={{ display: "flex", height: "100%", width: "100%" }}>
         <Wrapper apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY ?? ""}>
           <GoogleMap
