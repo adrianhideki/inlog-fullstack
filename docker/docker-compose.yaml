@@ -9,33 +9,50 @@ networks:
     external: false
   
 services:
+  front:
+    build:
+      context: ../front-end
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 3000:80
+    networks:
+      - frontend
+      - backend
+    depends_on:
+      api:
+        condition: service_started
   api:
     build:
       context: ../back-end/Inlog.Desafio.Backend
       dockerfile: Dockerfile
     restart: always
     env_file:
-      - ./api.env
+      - ./envs/api.env
     ports:
       - 5080:80
     networks:
       - database
       - backend
+    depends_on:
+      database:
+        condition: service_started
   database:
     image: mongo
     restart: always
     env_file:
-      - ./mongo.env
-    # ports:
-    #   - 27017:27017
+      - ./envs/mongo.env
     networks:
       - database
-  mongo-express:
-    image: mongo-express
-    restart: always
-    ports:
-      - 8081:8081
-    env_file:
-      - ./express.env
-    networks:
-      - database
+  # mongo-express:
+  #   image: mongo-express
+  #   restart: always
+  #   ports:
+  #     - 8081:8081
+  #   env_file:
+  #     - ./envs/express.env
+  #   networks:
+  #     - database
+  #   depends_on:
+  #     database:
+  #       condition: service_started
